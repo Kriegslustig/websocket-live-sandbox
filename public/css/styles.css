@@ -1,0 +1,53 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 12px;
+}
+
+main {
+  padding: 1rem;
+}
+
+input,
+textarea,
+output {
+  display: block;
+  width: 100%;
+  margin: 1rem 0;
+  padding: 0 .5rem;
+  border: none;
+  font-size: inherit;
+  font-family: monospace;
+}
+
+textarea,
+input {
+  background-color: hsl(0,0%,95%);
+}
+
+input {
+  line-height: 2.5rem;
+}
+
+textarea,
+output {
+  padding: .4rem;
+}
+
+output {
+  font: inherit;
+}
+
+output p {
+  //padding: .2rem 0;
+}
+
+output span {
+  font-family: monospace;
+}
+
+textarea {
+  min-height: 20rem;
+}

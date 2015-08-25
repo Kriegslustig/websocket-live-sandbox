@@ -40,7 +40,7 @@ function mayEval (str) {
 }
 
 function isControlEnter (e) {
-  return e.ctrlKey && e.keyCode === 13
+  return (e.ctrlKey || e.shiftKey) && e.keyCode === 13
 }
 
 function sendToSocket (socket, text) {
@@ -74,9 +74,9 @@ function isSocketOpen (socket) {
 function wrapType (type) {
   var elem
   var types = {
-    error: ['code', 'strong'],
+    error: ['strong'],
     system: ['i'],
-    message: ['code']
+    message: ['span']
   }
   if(types[type]) types[type].forEach(function (tag) {
     var newElem = document.createElement(tag)
