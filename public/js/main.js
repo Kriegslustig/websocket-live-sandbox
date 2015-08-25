@@ -1,4 +1,6 @@
 var socket = false
+var react
+var send
 var outputElem
 
 addEventListener('load', function () {
@@ -12,10 +14,11 @@ document.getElementsByTagName('input')[0].addEventListener('keydown', function (
       .isPrototypeOf(
         socket = tryConnect(e.target.value)
       )
-  )
+  ) {
     return outputElem.appendChild(
       output('WebSocket-connection failed: ' + socket, 'error')
     )
+  }
 
   outputElem.appendChild(output('Opening WebSocket...', 'system'))
   socket.addEventListener('message', function (e) {
@@ -24,12 +27,15 @@ document.getElementsByTagName('input')[0].addEventListener('keydown', function (
   socket.addEventListener('error', function (e) {
     outputElem.appendChild(output(handleWebsocketError(e), 'error'))
   })
+
+  react = reacter(socket)
+  send = sender(socket, outputElem)
 })
 
 document.getElementsByTagName('textarea')[0].addEventListener('keydown', function (e) {
+  var text
   interceptTab(e)
-  if(!(isSocketOpen(socket) && isControlEnter(e))) return
-  sendToSocket(socket, mayEval(e.target.value))
+  if(!isControlEnter(e)) return
 })
 
 function mayEval (str) {
@@ -45,11 +51,22 @@ function isControlEnter (e) {
 }
 
 function isEnter (keyCode) {
-  keyCode === 13
+  return keyCode === 13
+}
+
+function sender (socket, outputElem) {
+  return function (str) {
+    var text = mayEval(str)
+    if(sendToSocket(socket, text)) {
+      outputElem.appendChild(output(text, 'system'))
+    }
+  }
 }
 
 function sendToSocket (socket, text) {
+  if(!isSocketOpen(socket) || typeof text != 'string' || !text) return false
   socket.send(text)
+  return true
 }
 
 function output (data, type) {
@@ -100,7 +117,7 @@ function deepAppend (target, elem) {
 function interceptTab (e) {
   var text
   var start
-  if(e.keyCode !== 9) return
+  if(e.shiftKey || e.keyCode !== 9) return
   start = e.target.selectionStart
   text = e.target.value
   e.preventDefault()
@@ -110,4 +127,33 @@ function interceptTab (e) {
   ].join('  ')
   e.target.selectionStart = start + 2
   e.target.selectionEnd = start + 2
+}
+
+/*********************************************
+ * Userspace
+ *********************************************/
+
+function reacter (socket) {
+  return function (condition, cb, err) {
+    socket.addEventListener(
+      err ?
+        'error':
+        'message',
+      function (e) {
+        if(!match(condition, e.data)) return
+        cb(e.data)
+      }
+    )
+  }
+}
+
+function match (cond, thing) {
+  if(RegExp.prototype.isPrototypeOf(cond)) {
+    return cond.test(thing)
+  } else if(typeof cond == 'function') {
+    return cond(thing)
+  } else if(typeof cond == 'string') {
+    return cond === thing
+  }
+  return false
 }
