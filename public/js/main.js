@@ -6,7 +6,7 @@ addEventListener('load', function () {
 })
 
 document.getElementsByTagName('input')[0].addEventListener('keydown', function (e) {
-  if(!isControlEnter(e)) return
+  if(!isEnter(e.keyCode)) return
   if(
     DOMException.prototype
       .isPrototypeOf(
@@ -27,6 +27,7 @@ document.getElementsByTagName('input')[0].addEventListener('keydown', function (
 })
 
 document.getElementsByTagName('textarea')[0].addEventListener('keydown', function (e) {
+  interceptTab(e)
   if(!(isSocketOpen(socket) && isControlEnter(e))) return
   sendToSocket(socket, mayEval(e.target.value))
 })
@@ -40,7 +41,11 @@ function mayEval (str) {
 }
 
 function isControlEnter (e) {
-  return (e.ctrlKey || e.shiftKey) && e.keyCode === 13
+  return (e.ctrlKey || e.shiftKey) && isEnter(e.keyCode)
+}
+
+function isEnter (keyCode) {
+  keyCode === 13
 }
 
 function sendToSocket (socket, text) {
@@ -90,4 +95,19 @@ function deepAppend (target, elem) {
     deepAppend(target.children[0], elem) :
     target.appendChild(elem)
   return target
+}
+
+function interceptTab (e) {
+  var text
+  var start
+  if(e.keyCode !== 9) return
+  start = e.target.selectionStart
+  text = e.target.value
+  e.preventDefault()
+  e.target.value = [
+    text.substr(0, start),
+    text.substr(start)
+  ].join('  ')
+  e.target.selectionStart = start + 2
+  e.target.selectionEnd = start + 2
 }
