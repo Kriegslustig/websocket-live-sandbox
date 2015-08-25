@@ -49,9 +49,9 @@ function sendToSocket (socket, text) {
 
 function output (data, type) {
   var elem = document.createElement('p')
+  var text = document.createTextNode(data)
   elem.className = type
-  elem.innerHTML = data
-  return deepAppend(wrapType(type), elem)
+  return deepAppend(elem, deepAppend(wrapType(type), text))
 }
 
 function tryConnect (url) {
