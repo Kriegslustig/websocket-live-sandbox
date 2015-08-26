@@ -1,10 +1,9 @@
 var socket = false
 var react
 var send
-var outputElem
 
 addEventListener('load', function () {
-  outputElem = document.getElementsByTagName('output')[0]
+  output = outputer(document.getElementsByTagName('output')[0])
 })
 
 document.getElementsByTagName('input')[0].addEventListener('keydown', function (e) {
@@ -15,33 +14,34 @@ document.getElementsByTagName('input')[0].addEventListener('keydown', function (
         socket = tryConnect(e.target.value)
       )
   ) {
-    return outputElem.appendChild(
-      output('WebSocket-connection failed: ' + socket, 'error')
-    )
+    return output('WebSocket-connection failed: ' + socket, 'error')
   }
 
-  outputElem.appendChild(output('Opening WebSocket...', 'system'))
+  output('Opening WebSocket...', 'system')
   socket.addEventListener('message', function (e) {
-    outputElem.appendChild(output(e.data, 'message'))
+    output(e.data, 'message')
   })
   socket.addEventListener('error', function (e) {
-    outputElem.appendChild(output(handleWebsocketError(e), 'error'))
+    output(handleWebsocketError(e), 'error')
   })
 
   react = reacter(socket)
-  send = sender(socket, outputElem)
+  send = sender(socket)
 })
 
 document.getElementsByTagName('textarea')[0].addEventListener('keydown', function (e) {
   var text
   interceptTab(e)
   if(!isControlEnter(e)) return
+  text = mayEval(e.target.value)
+  send(text)
 })
 
 function mayEval (str) {
   try {
     return eval(str)
   } catch (e) {
+    console.error(e)
     return str
   }
 }
@@ -54,12 +54,9 @@ function isEnter (keyCode) {
   return keyCode === 13
 }
 
-function sender (socket, outputElem) {
+function sender (socket) {
   return function (str) {
-    var text = mayEval(str)
-    if(sendToSocket(socket, text)) {
-      outputElem.appendChild(output(text, 'system'))
-    }
+    if(sendToSocket(socket, str)) output(text, 'system')
   }
 }
 
@@ -69,11 +66,13 @@ function sendToSocket (socket, text) {
   return true
 }
 
-function output (data, type) {
-  var elem = document.createElement('p')
-  var text = document.createTextNode(data)
-  elem.className = type
-  return deepAppend(elem, deepAppend(wrapType(type), text))
+function outputer (parent) {
+  return function (data, type) {
+    var elem = document.createElement('p')
+    var text = document.createTextNode(data)
+    elem.className = type
+    return parent.appendChild(deepAppend(elem, deepAppend(wrapType(type), text)))
+  }
 }
 
 function tryConnect (url) {
@@ -144,6 +143,7 @@ function reacter (socket) {
         cb(e.data)
       }
     )
+    output('Added hook for ' + condition, 'system')
   }
 }
 
