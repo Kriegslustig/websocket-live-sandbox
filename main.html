@@ -11,6 +11,20 @@
     <input type="text" placeholder="ws(s)://someHost">
     <textarea></textarea>
     <output></output>
+    <section>
+      <h3>Help:</h3>
+      <h4>Input</h4>
+      <p>The URL you want to connect to.</p>
+      <p><i>Enter</i>: Submit</p>
+      <h4>Textarea</h4>
+      <p>The text you want to send to the socket. Everytime you submit the contents of the text box get sent to the opened WebSocket connection. You may also use JavaScript.</p>
+      <p><i>Ctrl/Shift + Enter</i>: Submit</p>
+      <h5>JavaScript</h5>
+      <p><i>Return</i>: The Return value of the script you submit is sent to the socket.</p>
+      <p><i>react(pattern, reactor)</i>: A function that calls a callback when the pattern matches a message sent by the server. The pattern may be a <i>String</i>, a <i>RegExp</i> or a <i>match</i> function.</p>
+      <p><i>reactor</i>: A function that takes an argument <i>data</i> which contains data sent by the server. Inside the function <i>this.send</i> refers to a function that sends messages to the server.</p>
+      <p><i>match</i>: A function that takes a message sent by the server as an argument and returns a boolean value.</p>
+    </section>
   </main>
   <script type="text/javascript" src="public/js/lib.js"></script>
   <script type="text/javascript" src="public/js/output.js"></script>
