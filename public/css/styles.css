@@ -6,7 +6,7 @@ html {
   font-size: 12px;
 }
 
-main {
+main > section {
   padding: 1rem;
 }
 
@@ -40,6 +40,7 @@ output {
 
 output {
   font: inherit;
+  border-top: 1px solid hsl(0,0%,50%);
 }
 
 output span {
@@ -57,4 +58,11 @@ output p {
 
 textarea {
   min-height: 20rem;
+}
+
+@media (min-width: 800px) {
+  main > section {
+    float: left;
+    width: 50%;
+  }
 }
