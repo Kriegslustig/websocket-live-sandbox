@@ -7,7 +7,6 @@
     if(is(socket = tryConnect(e.detail.value), Error.prototype)) {
       return output('WebSocket-connection failed: ' + socket, 'error')
     }
-    console.log(socket)
 
     output('Opening WebSocket...', 'system')
     socket.addEventListener('message', function (e) {
@@ -22,21 +21,33 @@
   })
 
   addEventListener('submit-textarea', function (e) {
-    send(mayEval(e.detail.value))
+    var text = e.detail.value
+    if(isMarkedAsString(text)) {
+      send(getMarkedString(text))
+    } else {
+      send(mayEval(text))
+    }
   })
+
+  function isMarkedAsString (str) {
+    return str[0] === '-'
+  }
+
+  function getMarkedString (str) {
+    return str.substr(1)
+  }
 
   function mayEval (str) {
     try {
       return eval(str)
     } catch (e) {
-      console.error(e)
-      return str
+      output(e, 'error')
     }
   }
 
   function sender (socket) {
     return function (str) {
-      if(sendToSocket(socket, str)) output(text, 'system')
+      if(sendToSocket(socket, str)) output(str, 'system')
     }
   }
 
