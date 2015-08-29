@@ -61,6 +61,10 @@ textarea {
 }
 
 @media (min-width: 800px) {
+  output {
+    border: none;
+  }
+
   main > section {
     float: left;
     width: 50%;
