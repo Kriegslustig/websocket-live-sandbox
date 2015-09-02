@@ -15,16 +15,20 @@ addEventListener('load', function () {
   })
 
   elems[1].addEventListener('keydown', function (e) {
-    return matchMulti(e, [
+    return matchSingle(e, [
       [
         isControlEnter,
         callerWith(dispatchSubmitEvent, 'target')
       ],
       [
         isKeyChecker('tab', true),
-        insertTwoSpaces
+        checkShortCut
       ],
-    ])[0]
+      [
+        isKeyChecker('tab', true),
+        insertTwoSpaces
+      ]
+    ])
   })
 
   function callerWith (func, key) {
