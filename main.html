@@ -25,6 +25,14 @@
           <p><i>react(pattern, reactor)</i>: A function that calls a callback when the pattern matches a message sent by the server. The pattern may be a <i>String</i>, a <i>RegExp</i> or a <i>match</i> function.</p>
           <p><i>reactor</i>: A function that takes an argument <i>data</i> which contains data sent by the server. Inside the function <i>this.send</i> refers to a function that sends messages to the server.</p>
           <p><i>match</i>: A function that takes a message sent by the server as an argument and returns a boolean value.</p>
+          <h4>Shortcuts</h4>
+          <p>
+            <ul>
+              <li><b>ddp pong</b> - <i>react('ping', function () { this.send(JSON.stringify({msg: 'pong'})) })</i></li>
+              <li><b>ddp connect</b> - <i>JSON.stringify({msg: 'connect', version: '1', support: ['1']})</i></li>
+              <li><b>ddp msg</b> - <i>JSON.stringify({msg: ''})</i></li>
+            </ul>
+          </p>
           <h5>Text</h5>
           <p>You can also use text. When the first character inside the textbox is a -, it will be interpreted as a string.</p>
         </section>
