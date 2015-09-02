@@ -4,8 +4,8 @@ var settings = {
   port: 4533
 }
 
-app.use(express.static('./', {
-  index: 'main.html'
+app.use(express.static('./public', {
+  index: '../main.html'
 }))
 
 app.listen(settings.port)
